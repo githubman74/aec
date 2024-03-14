@@ -1,0 +1,46 @@
+package com.example.text2speech;
+import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.Locale;
+public class MainActivity extends AppCompatActivity {
+private EditText editText;
+private Button buttonConvert;
+private TextToSpeech textToSpeech;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+editText = findViewById(R.id.editText);
+buttonConvert = findViewById(R.id.buttonConvert);
+textToSpeech = new TextToSpeech(getApplicationContext(),
+new TextToSpeech.OnInitListener() {
+@Override
+public void onInit(int status) {
+if (status != TextToSpeech.ERROR) {
+textToSpeech.setLanguage(Locale.US);
+}
+}
+});
+buttonConvert.setOnClickListener(new
+View.OnClickListener() {
+@Override
+public void onClick(View v) {
+String text = editText.getText().toString();
+textToSpeech.speak(text,
+TextToSpeech.QUEUE_FLUSH, null, null);
+}
+});
+}
+@Override
+protected void onDestroy() {
+if (textToSpeech != null) {
+textToSpeech.stop();
+textToSpeech.shutdown();
+}
+super.onDestroy();
+}
+}
